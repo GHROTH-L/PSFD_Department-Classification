@@ -1,6 +1,6 @@
 # -PSFD_學系分類使用
 ## 使用PSFD 對於台灣各大學的學系分類，共18個分類
-| mainid| mainame|
+| mainid| mainname|
 |-------|-----------|
 | 2	| 教育學類| 
 | 3	| 藝術學類| 
@@ -24,8 +24,17 @@
 ## 使用ckip_nlp 以及 jeiba 進行分詞
 ckip 參照https://github.com/ckiplab/ckiptagger/wiki/Chinese-README
 
-## 使用隨機森林
+## 使用random forest、naive_bayes、SVM、LightGBM 進行訓練
+### 各模型準確率
+| Model| Accu.|
+|-------|-----------|
+|RdF | 0.87|
+|NB  | 0.88|
+|SVM | 0.90|
+|LightGBM|0.87|
 
+
+#資料來源：華人家庭動態調查(https://psfd.sinica.edu.tw/V2/?page_id=368&lang=zh)
 
 
 
