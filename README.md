@@ -27,7 +27,7 @@ ckip 參照https://github.com/ckiplab/ckiptagger/wiki/Chinese-README
 ## 使用random forest、naive_bayes、SVM、LightGBM 進行訓練
 ### 各模型準確率
 | Model| Accu.|
-|-------|-----------|
+|-------|-----|
 |RdF | 0.87|
 |NB  | 0.88|
 |SVM | 0.90|
