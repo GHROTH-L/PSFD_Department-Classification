@@ -1,3 +1,4 @@
+#%%
 from sklearn.preprocessing import LabelEncoder
 import tensorflow as tf
 import pandas as pd
@@ -142,7 +143,7 @@ def weighted_voting(row):
         return svm_pred  # 若其他模型無法提供結果，回傳 SVM 預測值
 
 #集成
-def ensemble_voting(data2, models, results_df, suffixes, weighted_voting, output_file="final_predictions.csv"):
+def ensemble_voting(data2, models, results_df, suffixes, weighted_voting):
 
     # 建立 DataFrame 存放所有模型的預測結果
     ensemble_results = pd.DataFrame()
@@ -166,26 +167,51 @@ def ensemble_voting(data2, models, results_df, suffixes, weighted_voting, output
     # 套用加權投票
     ensemble_results["final_pred"] = ensemble_results.apply(weighted_voting, axis=1)
 
-    # 儲存結果
-    ensemble_results.to_csv(output_file, index=False)
-    print(f"✅  已儲存至 {output_file}")
-
     return ensemble_results  
 
+def predict_department_text(text, models, vectorizer, label_encoder, weighted_voting):
 
+    if not isinstance(text, str) or len(text.strip()) == 0:
+        raise ValueError("⚠️ 請輸入有效的學系名稱！")
+
+    # 建立 DataFrame 格式，以符合 `merge_model_predictions()` 的需求
+    data = pd.DataFrame({"n_lastname": [text]})
+    data["lastname"] = data["n_lastname"]
+    data["result"] = data["n_lastname"]
+    data["jeiba_lastname"] = data["n_lastname"]
+
+    # 進行所有模型預測並合併結果
+    merged_smote_df, results_df , suffixes = merge_model_predictions(data, models, predict_and_evaluate, vectorizer, label_encoder)
+
+    # 套用加權投票，並取得最終學系預測
+    final_prediction = ensemble_voting(merged_smote_df, models, results_df, suffixes, weighted_voting)
+
+    return final_prediction
+#%%
 
 if __name__ == "__main__":
-
+    #%%
     # 載入Models
     MODEL_DIR = "E:/PSFD_Department-Classification/Models"
     vectorizer, label_encoder, models = load_models(MODEL_DIR)
-
+    #%%
     # 上載想要預測的數據
     data2 = pd.read_csv("C:/Users/user/Downloads/data.csv", encoding="utf-8")
 
     # 執行預測並合併結果
     merged_smote_df, results_df , suffixes = merge_model_predictions(data2, models, predict_and_evaluate, vectorizer, label_encoder)
-    
+    #%%
     #進行結果輸出
     ensemble_results = ensemble_voting(data2, models, results_df, suffixes, weighted_voting)
+
+    # 儲存結果
+    output_file="final_predictions.csv"
+    ensemble_results.to_csv(output_file, index=False)
+    print(f"✅  已儲存至 {output_file}")
+    #%%
+    # 測試單純輸入文字
+    text_input = "法律"
+    final_pred = predict_department_text(text_input, models, vectorizer, label_encoder, weighted_voting)
+    print(f"🎯 最終預測學系：{final_pred['final_pred']}")
+#%%
 
