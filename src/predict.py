@@ -117,9 +117,9 @@ def merge_model_predictions(data2, models, predict_and_evaluate, vectorizer, lab
 def weighted_voting(row):
     """當 SVM 信心機率 < 90% 時，使用加權投票"""
     model_weights = {
-        "nb_smote_pred": 3,   # NB 權重最高
-        "lgbm_smote_pred": 1, # LGBM 權重最低
-        "rdf_smote_pred": 2    # 隨機森林權重 中間
+        "nb_smote_pred": 0.5,   # NB 權重最高
+        "lgbm_smote_pred": 0.2, # LGBM 權重最低
+        "rdf_smote_pred": 0.3    # 隨機森林權重 中間
     }
 
     threshold = 0.90  # SVM 信心機率閾值
@@ -134,7 +134,7 @@ def weighted_voting(row):
     vote_scores = Counter()
     for model, weight in model_weights.items():
         if pd.notna(row[model]):  # 確保不處理 NaN
-            vote_scores[row[model]] += weight
+            vote_scores[row[model]] += row[model] * weight
 
     # 取得權重最高的類別
     if vote_scores:
