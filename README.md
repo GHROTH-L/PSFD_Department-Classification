@@ -28,10 +28,11 @@ ckip 參照https://github.com/ckiplab/ckiptagger/wiki/Chinese-README
 ### 各模型準確率
 | Model| Accu.|
 |-------|-----|
-|RdF | 0.87|
-|NB  | 0.88|
-|SVM | 0.90|
-|LightGBM|0.87|
+|RdF | 0.869|
+|NB  | 0.890|
+|SVM | 0.897|
+|LightGBM|0.872|
+|集成分類|0.899|
 
 
 ## 資料來源：華人家庭動態調查(https://psfd.sinica.edu.tw/V2/?page_id=368&lang=zh)
